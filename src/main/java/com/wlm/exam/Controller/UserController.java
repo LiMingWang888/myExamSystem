@@ -28,6 +28,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author WangLiMing
@@ -46,10 +48,10 @@ public class UserController {
     private StringRedisTemplate redisTemplate;
 
     @PostMapping("/login")
-    public ResultResponse login(@Valid UserLoginRequestVO userLoginRequestVO, BindingResult bindingResult, HttpServletResponse response) {
+    public ModelAndView login(@Valid UserLoginRequestVO userLoginRequestVO, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             if (log.isErrorEnabled()) {
-                log.error("【登录操作】账号格式不符合规范");
+                log.error("【登录操作】输入数据格式不符规范");
             }
             throw new LoginException(ResultEnum.INVALID_PARAM.getCode(),
                     bindingResult.getFieldError().getDefaultMessage());
@@ -58,34 +60,26 @@ public class UserController {
         //获取当前用户
         User userData = userService.getUserData(userLoginRequestVO.getName());
         Integer userType = userData.getUserType();
-        //校验用户类型
-        if (!userType.equals(userLoginRequestVO.getUserType())) {
-            if (log.isErrorEnabled()) {
-                log.error("【登录操作】账号格式不符合规范");
-            }
-            throw new LoginException(ResultEnum.INVALID_PARAM.getCode(),
-                    bindingResult.getFieldError().getDefaultMessage());
-        }
         //校验用户密码，如果正确则存储至redis中
         userService.checkPassWord(userLoginRequestVO.getPassword(), userData);
 
-//        //设置token到redis
-//        String token = UUID.randomUUID().toString();
-//        Integer expire = RedisConstant.EXPIRE;
-//        redisTemplate.opsForValue().set(String.format(RedisConstant.TOKEN_PREFIX, token), String.valueOf(userData.getUserId()), expire, TimeUnit.SECONDS);
-//
-//        //设置token至cookie
-//        CookieUtil.set(response, CookieConstant.TOKEN, token, expire);
+        //设置token到redis
+        String token = UUID.randomUUID().toString();
+        Integer expire = RedisConstant.EXPIRE;
+        redisTemplate.opsForValue().set(String.format(RedisConstant.TOKEN_PREFIX, token), String.valueOf(userData.getUserId()), expire, TimeUnit.SECONDS);
 
-        userService.checkUserType(userLoginRequestVO.getUserType(), userData);
+        //设置token至cookie
+        CookieUtil.set(response, CookieConstant.TOKEN, token, expire);
 
-//        if (userData.getUserType() == 2) {
-//            return new ModelAndView("user/adminHome");
-//        } else if (userData.getUserType() == 1) {
-//            return new ModelAndView("user/studentHome");
-//        }
-//        return null;
-        return ResultResponse.success(userData);
+//        userService.checkUserType(userLoginRequestVO.getUserType(), userData);
+
+        if (userData.getUserType() == 2) {
+            return new ModelAndView("user/adminHome");
+        } else if (userData.getUserType() == 1) {
+            return new ModelAndView("user/studentHome");
+        }
+        return null;
+//        return ResultResponse.success(userData);
     }
 
 
