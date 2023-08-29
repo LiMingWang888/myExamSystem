@@ -1,8 +1,8 @@
 package com.wlm.exam.service;
 
-import com.wlm.exam.VO.ResultResponse;
-import com.wlm.exam.form.ModifyUserFormVO;
 import com.wlm.exam.pojo.User;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author wlm
@@ -11,11 +11,11 @@ import com.wlm.exam.pojo.User;
 public interface UserService {
     User getUserData(String username);
 
-    ResultResponse modifyUser(ModifyUserFormVO form);
+//    ResultResponse modifyUser(ModifyUserFormVO form);
 
     User selectById(String userId);
 
-    void checkPassWord(String password, User userData);
+    void checkPassWord(String password, User userData, HttpServletResponse response);
 
     void checkUserType(Integer userType, User userData);
 }
