@@ -2,17 +2,18 @@ package com.wlm.exam.service.impl;
 
 import com.wlm.exam.constant.CookieConstant;
 import com.wlm.exam.constant.RedisConstant;
-import com.wlm.exam.exception.LoginEnum;
+import com.wlm.exam.enums.LoginEnum;
 import com.wlm.exam.exception.LoginException;
+import com.wlm.exam.form.ModifyUserFormVO;
 import com.wlm.exam.mapper.UserMapper;
 import com.wlm.exam.pojo.User;
 import com.wlm.exam.service.UserService;
 import com.wlm.exam.utils.CookieUtil;
-import com.wlm.exam.vo.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
+import com.wlm.exam.vo.ResultResponse;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
@@ -38,27 +39,27 @@ public class UserServiceImpl implements UserService {
         if (users.isEmpty()) {
             if (log.isWarnEnabled()) {
                 log.warn("用户信息不存在，错误的登录名：{}", username);
-                throw new LoginException(LoginEnum.LOGINTYPE_DISABLE.getMessage());
+                throw new LoginException(LoginEnum.LOGINUSER_DISABLE.getMessage());
             }
         }
         return users.get(0);
     }
 
-//    @Override
-//    public ResultResponse modifyUser(ModifyUserFormVO form) {
-//        if (form.getNewPassword().equals(form.getRenewPassword())) {
-//            return ResultResponse.error(-1, "两次输入的密码不一致");
-//        }
-//        User user = userMapper.selectByPrimaryKey(form.getId());
-//        if (form.getOldPassword().equals(user.getPassword())) {
-//            user.setPassword(form.getNewPassword());
-//            user.setNickname(form.getNickName());
-//            userMapper.updateByPrimaryKey(user);
-//            return ResultResponse.success();
-//        } else {
-//            return ResultResponse.error(-100, "原密码错误");
-//        }
-//    }
+    @Override
+    public ResultResponse modifyUser(ModifyUserFormVO form) {
+        if (form.getNewPassword().equals(form.getRenewPassword())) {
+            return ResultResponse.error(-1, "两次输入的密码不一致");
+        }
+        User user = userMapper.selectByPrimaryKey(form.getId());
+        if (form.getOldPassword().equals(user.getPassword())) {
+            user.setPassword(form.getNewPassword());
+            user.setNickname(form.getNickName());
+            userMapper.updateByPrimaryKey(user);
+            return ResultResponse.success();
+        } else {
+            return ResultResponse.error(-100, "原密码错误");
+        }
+    }
 
     @Override
     public User selectById(String userId) {

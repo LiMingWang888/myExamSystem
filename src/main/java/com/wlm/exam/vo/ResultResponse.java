@@ -1,6 +1,6 @@
-package com.wlm.exam.VO;
+package com.wlm.exam.vo;
 
-import com.wlm.exam.enums.ResultEnum;
+import com.wlm.exam.enums.LoginEnum;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -30,15 +30,15 @@ public class ResultResponse<T> implements Serializable {
 
     public static <T> ResultResponse<T> success(T data) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
-        resultResponse.setCode(ResultEnum.SUCCESS.getCode());
+        resultResponse.setCode(LoginEnum.SUCCESS.getCode());
         resultResponse.setData(data);
-        resultResponse.setMsg(ResultEnum.SUCCESS.getMessage());
+        resultResponse.setMsg(LoginEnum.SUCCESS.getMessage());
         return resultResponse;
     }
 
     public static <T> ResultResponse<T> success(String message, T data) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
-        resultResponse.setCode(ResultEnum.SUCCESS.getCode());
+        resultResponse.setCode(LoginEnum.SUCCESS.getCode());
         resultResponse.setData(data);
         resultResponse.setMsg(message);
         return resultResponse;
@@ -46,13 +46,13 @@ public class ResultResponse<T> implements Serializable {
 
     public static <T> ResultResponse<T> error(String message) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
-        resultResponse.setCode(ResultEnum.SUCCESS.getCode());
+        resultResponse.setCode(LoginEnum.SUCCESS.getCode());
         resultResponse.setData(null);
         resultResponse.setMsg(message);
         return resultResponse;
     }
 
-    public static <T> ResultResponse<T> error(String message, Integer code) {
+    public static <T> ResultResponse<T> error(Integer code, String message) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
         resultResponse.setCode(code);
         resultResponse.setData(null);

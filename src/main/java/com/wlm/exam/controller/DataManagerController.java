@@ -1,7 +1,6 @@
 package com.wlm.exam.Controller;
 
 import com.github.pagehelper.PageInfo;
-import com.wlm.exam.VO.ResultResponse;
 import com.wlm.exam.constant.CookieConstant;
 import com.wlm.exam.constant.RedisConstant;
 import com.wlm.exam.pojo.Course;
@@ -11,6 +10,7 @@ import com.wlm.exam.service.DataManagementService;
 import com.wlm.exam.service.UserService;
 import com.wlm.exam.utils.CookieUtil;
 import com.wlm.exam.utils.UserTypeUtil;
+import com.wlm.exam.vo.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;

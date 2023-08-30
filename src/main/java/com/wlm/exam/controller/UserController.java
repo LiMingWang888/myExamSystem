@@ -1,9 +1,8 @@
-package com.wlm.exam.Controller;
+package com.wlm.exam.controller;
 
-import com.wlm.exam.VO.ResultResponse;
 import com.wlm.exam.constant.CookieConstant;
 import com.wlm.exam.constant.RedisConstant;
-import com.wlm.exam.enums.ResultEnum;
+import com.wlm.exam.enums.LoginEnum;
 import com.wlm.exam.exception.LoginException;
 import com.wlm.exam.form.ModifyUserFormVO;
 import com.wlm.exam.form.UserLoginRequestVO;
@@ -11,6 +10,7 @@ import com.wlm.exam.pojo.User;
 import com.wlm.exam.service.UserService;
 import com.wlm.exam.utils.CookieUtil;
 import com.wlm.exam.utils.UserTypeUtil;
+import com.wlm.exam.vo.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -50,8 +50,7 @@ public class UserController {
             if (log.isErrorEnabled()) {
                 log.error("【登录操作】账号格式不符合规范");
             }
-            throw new LoginException(ResultEnum.INVALID_PARAM.getCode(),
-                    bindingResult.getFieldError().getDefaultMessage());
+            throw new LoginException(LoginEnum.INVALID_PARAM.getMessage());
         }
 
         //获取当前用户
@@ -62,28 +61,13 @@ public class UserController {
             if (log.isErrorEnabled()) {
                 log.error("【登录操作】账号格式不符合规范");
             }
-            throw new LoginException(ResultEnum.INVALID_PARAM.getCode(),
-                    bindingResult.getFieldError().getDefaultMessage());
+            throw new LoginException(LoginEnum.INVALID_PARAM.getMessage());
         }
         //校验用户密码，如果正确则存储至redis中
-        userService.checkPassWord(userLoginRequestVO.getPassword(), userData);
-
-//        //设置token到redis
-//        String token = UUID.randomUUID().toString();
-//        Integer expire = RedisConstant.EXPIRE;
-//        redisTemplate.opsForValue().set(String.format(RedisConstant.TOKEN_PREFIX, token), String.valueOf(userData.getUserId()), expire, TimeUnit.SECONDS);
-//
-//        //设置token至cookie
-//        CookieUtil.set(response, CookieConstant.TOKEN, token, expire);
+        userService.checkPassWord(userLoginRequestVO.getPassword(), userData, response);
 
         userService.checkUserType(userLoginRequestVO.getUserType(), userData);
 
-//        if (userData.getUserType() == 2) {
-//            return new ModelAndView("user/adminHome");
-//        } else if (userData.getUserType() == 1) {
-//            return new ModelAndView("user/studentHome");
-//        }
-//        return null;
         return ResultResponse.success(userData);
     }
 
