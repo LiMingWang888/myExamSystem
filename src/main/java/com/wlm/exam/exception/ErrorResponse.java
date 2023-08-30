@@ -1,8 +1,10 @@
 package com.wlm.exam.exception;
 
-import java.time.Instant;
-import java.util.HashMap;
+import lombok.Data;
 
+import java.time.Instant;
+
+@Data
 public class ErrorResponse {
     private int code;
     private int status;
@@ -25,65 +27,5 @@ public class ErrorResponse {
         this.path = path;
         this.timestamp = Instant.now();
         this.data = data;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public Instant getTimestamp() {
-        return timestamp;
-    }
-
-    public void setTimestamp(Instant timestamp) {
-        this.timestamp = timestamp;
-    }
-
-    public Object getData() {
-        return data;
-    }
-
-    public void setData(HashMap<String, Object> data) {
-        this.data = data;
-    }
-
-    @Override
-    public String toString() {
-        return "ErrorReponse{" +
-                "code=" + code +
-                ", status=" + status +
-                ", message='" + message + '\'' +
-                ", path='" + path + '\'' +
-                ", timestamp=" + timestamp +
-                ", data=" + data +
-                '}';
     }
 }

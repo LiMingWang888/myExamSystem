@@ -38,27 +38,11 @@ public class UserServiceImpl implements UserService {
         List<User> users = userMapper.selectByUsername(username);
         if (users.isEmpty()) {
             if (log.isWarnEnabled()) {
-                log.warn("用户信息不存在，错误的登录名：{}", username);
+                log.warn("【登录操作】用户信息不存在！错误的登录名：{}", username);
                 throw new LoginException(LoginEnum.LOGINUSER_DISABLE.getMessage());
             }
         }
         return users.get(0);
-    }
-
-    @Override
-    public ResultResponse modifyUser(ModifyUserFormVO form) {
-        if (form.getNewPassword().equals(form.getRenewPassword())) {
-            return ResultResponse.error(-1, "两次输入的密码不一致");
-        }
-        User user = userMapper.selectByPrimaryKey(form.getId());
-        if (form.getOldPassword().equals(user.getPassword())) {
-            user.setPassword(form.getNewPassword());
-            user.setNickname(form.getNickName());
-            userMapper.updateByPrimaryKey(user);
-            return ResultResponse.success();
-        } else {
-            return ResultResponse.error(-100, "原密码错误");
-        }
     }
 
     @Override
@@ -78,7 +62,7 @@ public class UserServiceImpl implements UserService {
             CookieUtil.set(response, CookieConstant.TOKEN, token, expire);
         } else {
             if (log.isWarnEnabled()) {
-                log.warn("【登录操作】用户密码不正确！");
+                log.warn("【登录操作】用户密码不正确！错误的登录名：{}", userData.getUsername());
             }
             throw new LoginException(LoginEnum.LOGINPASSWORD_WRONG.getMessage());
         }
@@ -89,9 +73,26 @@ public class UserServiceImpl implements UserService {
         Integer userTypeCompared = userData.getUserType();
         if (!userTypeCompared.equals(userType)) {
             if (log.isWarnEnabled()) {
-                log.warn("【登录操作】用户类型不正确！");
+                log.warn("【登录操作】用户类型不正确！错误的登录名：{}", userData.getUsername());
             }
             throw new LoginException(LoginEnum.LOGINTYPE_DISABLE.getMessage());
         }
     }
+
+    @Override
+    public ResultResponse modifyUser(ModifyUserFormVO form) {
+        if (form.getNewPassword().equals(form.getRenewPassword())) {
+            return ResultResponse.error(-1, "两次输入的密码不一致");
+        }
+        User user = userMapper.selectByPrimaryKey(form.getId());
+        if (form.getOldPassword().equals(user.getPassword())) {
+            user.setPassword(form.getNewPassword());
+            user.setNickname(form.getNickName());
+            userMapper.updateByPrimaryKey(user);
+            return ResultResponse.success();
+        } else {
+            return ResultResponse.error(-100, "原密码错误");
+        }
+    }
+
 }

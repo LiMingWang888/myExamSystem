@@ -1,6 +1,7 @@
 package com.wlm.exam.vo;
 
 import com.wlm.exam.enums.LoginEnum;
+import com.wlm.exam.exception.ErrorCode;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -30,15 +31,15 @@ public class ResultResponse<T> implements Serializable {
 
     public static <T> ResultResponse<T> success(T data) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
-        resultResponse.setCode(LoginEnum.SUCCESS.getCode());
+        resultResponse.setCode(ErrorCode.SUCCESS.getCode());
         resultResponse.setData(data);
-        resultResponse.setMsg(LoginEnum.SUCCESS.getMessage());
+        resultResponse.setMsg(ErrorCode.SUCCESS.getMessage());
         return resultResponse;
     }
 
     public static <T> ResultResponse<T> success(String message, T data) {
         ResultResponse<T> resultResponse = new ResultResponse<>();
-        resultResponse.setCode(LoginEnum.SUCCESS.getCode());
+        resultResponse.setCode(ErrorCode.SUCCESS.getCode());
         resultResponse.setData(data);
         resultResponse.setMsg(message);
         return resultResponse;

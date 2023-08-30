@@ -14,12 +14,10 @@ import com.wlm.exam.vo.ResultResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.Cookie;
@@ -45,7 +43,7 @@ public class UserController {
     private StringRedisTemplate redisTemplate;
 
     @PostMapping("/login")
-    public ResultResponse login(@Valid UserLoginRequestVO userLoginRequestVO, BindingResult bindingResult, HttpServletResponse response) {
+    public /*ResultResponse<User>*/ResponseEntity<User> login(@Valid @RequestBody UserLoginRequestVO userLoginRequestVO, BindingResult bindingResult, HttpServletResponse response) {
         if (bindingResult.hasErrors()) {
             if (log.isErrorEnabled()) {
                 log.error("【登录操作】账号格式不符合规范");
@@ -55,21 +53,14 @@ public class UserController {
 
         //获取当前用户
         User userData = userService.getUserData(userLoginRequestVO.getName());
-        Integer userType = userData.getUserType();
         //校验用户类型
-        if (!userType.equals(userLoginRequestVO.getUserType())) {
-            if (log.isErrorEnabled()) {
-                log.error("【登录操作】账号格式不符合规范");
-            }
-            throw new LoginException(LoginEnum.INVALID_PARAM.getMessage());
-        }
+        userService.checkUserType(userLoginRequestVO.getUserType(), userData);
         //校验用户密码，如果正确则存储至redis中
         userService.checkPassWord(userLoginRequestVO.getPassword(), userData, response);
-
-        userService.checkUserType(userLoginRequestVO.getUserType(), userData);
-
-        return ResultResponse.success(userData);
+//        return ResultResponse.success(userData);
+        return ResponseEntity.ok(userData);
     }
+
 
 
     @GetMapping("/userInfo")

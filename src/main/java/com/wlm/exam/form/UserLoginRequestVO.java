@@ -17,6 +17,8 @@ public class UserLoginRequestVO {
     @NotEmpty(message = "密码不能为空")
     private String password;
 
-    //用户类型，其中1为学生，2为管理员
+    /**
+     * 用户类型，其中1为学生，2为管理员
+     */
     private Integer userType;
 }
