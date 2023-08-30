@@ -1,4 +1,4 @@
-package com.wlm.exam.Controller;
+package com.wlm.exam.controller;
 
 import com.github.pagehelper.PageInfo;
 import com.wlm.exam.constant.CookieConstant;
