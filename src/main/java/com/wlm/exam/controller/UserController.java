@@ -1,4 +1,4 @@
-package com.wlm.exam.Controller;
+package com.wlm.exam.controller;
 
 import com.wlm.exam.constant.CookieConstant;
 import com.wlm.exam.constant.RedisConstant;
@@ -60,7 +60,6 @@ public class UserController {
 //        return ResultResponse.success(userData);
         return ResponseEntity.ok(userData);
     }
-
 
 
     @GetMapping("/userInfo")
