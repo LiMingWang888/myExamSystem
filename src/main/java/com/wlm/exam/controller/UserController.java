@@ -1,4 +1,4 @@
-package com.wlm.exam.controller;
+package com.wlm.exam.Controller;
 
 import com.wlm.exam.constant.CookieConstant;
 import com.wlm.exam.constant.RedisConstant;

@@ -4,8 +4,10 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.wlm.exam.mapper.CourseMapper;
 import com.wlm.exam.mapper.StudentMapper;
+import com.wlm.exam.mapper.UserMapper;
 import com.wlm.exam.pojo.Course;
 import com.wlm.exam.pojo.Student;
+import com.wlm.exam.pojo.User;
 import com.wlm.exam.service.DataManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,8 +23,11 @@ public class DataManagementServiceImpl implements DataManagementService {
 
     @Autowired
     private CourseMapper courseMapper;
+
     @Autowired
     private StudentMapper studentMapper;
+    @Autowired
+    private UserMapper userMapper;
 
     @Override
     public void deleteCourse(String courseNo) {
@@ -64,5 +69,10 @@ public class DataManagementServiceImpl implements DataManagementService {
     @Override
     public void deleteStudentByStuNo(String stuNo) {
         studentMapper.deleteByPrimaryKey(stuNo);
+    }
+
+    public PageInfo<User> selectByUsernamewithPage(int page, int pageSize, String username) {
+        PageHelper.startPage(page, pageSize);
+        return new PageInfo<>(userMapper.selectByUsername(username));
     }
 }
